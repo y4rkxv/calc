@@ -3,19 +3,25 @@
   width: 300px;
   height: 520px;
   background-color: #000;
+  color: #fdfdfd;
+  font-family: Arial, Helvetica, sans-serif;
   border-radius: 20px;
   padding: 18px;
 }
 
-.calc__display {
+.calc__screen {
   height: 125px;
   display: grid;
   justify-content: end;
   align-items: end;
-  font-size: 24px;
-  width: 100%;
-  padding: 10px;
   margin-bottom: 20px;
+  padding: 10px;
+}
+.calc__screen p {
+  text-align: right;
+  font-size: 64px;
+  margin-bottom: 20px;
+  margin: 0;
 }
 
 .calc__btn {
