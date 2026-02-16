@@ -33,6 +33,29 @@ document.querySelector('.calc__btn').onclick = event => {
   //getting the clicked button
   const key = event.target.textContent;
 
+  //  +/-
+  if (key === '+/-') {
+    if (b === '' && sign === '') {
+      a = (a * -1).toString();
+      out.textContent = a;
+    } else {
+      b = (b * -1).toString();
+      out.textContent = b;
+    }
+    return;
+  }
+
+  //  %
+  if (key === '%') {
+    if (b === '' && sign === '') {
+      a = (a / 100).toString();
+      out.textContent = a;
+    } else {
+      b = (b / 100).toString();
+      out.textContent = b;
+    }
+    return;
+  }
   //0-9 ,
   if (digital.includes(key)) {
     if (b === '' && sign === '') {
@@ -51,7 +74,7 @@ document.querySelector('.calc__btn').onclick = event => {
     return;
   }
 
-  // + - *
+  // + - * /
 
   if (action.includes(key)) {
     sign = key;
