@@ -2,6 +2,8 @@ let a = '';
 let b = '';
 let sign = '';
 let finish = false;
+let lastOperation = '';
+let lastOperand = '';
 
 const digital = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ','];
 const action = ['-', '+', 'x', '/'];
@@ -18,6 +20,8 @@ function clearAll() {
   b = '';
   sign = '';
   finish = false;
+  lastOperation = '';
+  lastOperand = '';
   updateScreen();
 }
 
@@ -29,7 +33,6 @@ document.querySelector('.calc__btn').onclick = event => {
 
   const key = event.target.textContent;
 
-  // Кнопка C (Backspace)
   if (key === 'C') {
     if (b === '' && sign === '') {
       a = a.toString().slice(0, -1);
@@ -42,7 +45,6 @@ document.querySelector('.calc__btn').onclick = event => {
     return;
   }
 
-  // Зміна знаку +/-
   if (key === '+/-') {
     if (b === '' && sign === '') {
       a = (a.replace(',', '.') * -1).toString().replace('.', ',');
@@ -53,7 +55,6 @@ document.querySelector('.calc__btn').onclick = event => {
     return;
   }
 
-  // Відсоток %
   if (key === '%') {
     if (b === '' && sign === '') {
       a = (a.replace(',', '.') / 100).toString().replace('.', ',');
@@ -64,8 +65,16 @@ document.querySelector('.calc__btn').onclick = event => {
     return;
   }
 
-  // Введення цифр та коми
   if (digital.includes(key)) {
+    if (finish) {
+      a = '';
+      b = '';
+      sign = '';
+      finish = false;
+      lastOperation = '';
+      lastOperand = '';
+    }
+
     if (sign === '') {
       if ((a === '' || a === '0') && key !== ',') {
         a = key;
@@ -85,16 +94,49 @@ document.querySelector('.calc__btn').onclick = event => {
     return;
   }
 
-  // Вибір дії
   if (action.includes(key)) {
     if (a === '') a = '0';
     sign = key;
+    finish = false;
+    lastOperation = '';
     updateScreen();
     return;
   }
 
-  // Обчислення (=)
   if (key === '=') {
+    if (finish && lastOperation !== '' && lastOperand !== '') {
+      let numA = parseFloat(a.replace(',', '.'));
+      let numB = parseFloat(lastOperand.replace(',', '.'));
+      let result;
+
+      switch (lastOperation) {
+        case '+':
+          result = numA + numB;
+          break;
+        case '-':
+          result = numA - numB;
+          break;
+        case 'x':
+          result = numA * numB;
+          break;
+        case '/':
+          if (numB === 0) {
+            out.textContent = 'Error';
+            a = '';
+            b = '';
+            sign = '';
+            finish = false;
+            return;
+          }
+          result = numA / numB;
+          break;
+      }
+
+      a = result.toString().replace('.', ',');
+      updateScreen();
+      return;
+    }
+
     if (b === '') b = a;
 
     let numA = parseFloat(a.replace(',', '.'));
@@ -124,6 +166,9 @@ document.querySelector('.calc__btn').onclick = event => {
     }
 
     finish = true;
+
+    lastOperation = sign;
+    lastOperand = b;
 
     a = result.toString().replace('.', ',');
     b = '';
